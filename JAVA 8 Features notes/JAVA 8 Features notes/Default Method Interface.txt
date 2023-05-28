@@ -1,0 +1,143 @@
+https://javatechonline.com/java-8-features/
+
+Java 8 Features Example of Default Method Interface
+===================================================
+
+Default Method Interface
+=========================
+If we have an implemented method inside an interface with default keyword, 
+then we will call it as a "Default method". 
+We also call it defender method or virtual extension method.
+Default methods in interfaces were introduced in JDK 8 and became the part of Java 8 Features. 
+
+For example, in the below code, walks() is a default method inside interface Human. 
+Further, we can’t force Implementing classes to override this method.
+Ex:
+===
+interface Human {
+   void speaks();
+   void eats();
+
+   default void walks(){
+      System.out.println("Every human follows the same walking pattern");  ------> default method Interface
+   }
+}
+
+Example of Default Method Interface:
+====================================
+
+public interface A {
+
+    void m1();
+    void m2();
+    void m3();
+    default void m4() {
+      System.out.println(" I am a default method ");
+    }
+}
+
+public class A1 implements A {
+
+    @Override
+    public void m1() {
+      System.out.println("m1() from class A1");
+    }
+
+    @Override  
+    public void m2() {
+      System.out.println("m2() from class A1");
+    }
+
+    @Override
+    public void m3() {
+      System.out.println("m3() from class A1");
+    }
+}
+
+public class A2 implements A {
+
+    @Override
+    public void m1() {
+      System.out.println("m1() from class A2");
+    }
+
+    @Override
+    public void m2() {
+      System.out.println("m2() from class A2");
+    }
+
+    @Override
+    public void m3() {
+      System.out.println("m3() from class A2");
+    }
+
+    @Override
+    public void m4() {
+      System.out.println("m4() from class A2");
+    }
+}
+
+public class A3 implements A {
+
+    @Override
+    public void m1() {
+      System.out.println("m1() from class A3");
+    }
+
+    @Override
+    public void m2() {
+      System.out.println("m2() from class A3");
+    }
+
+    @Override 
+    public void m3() {
+      System.out.println("m3() from class A3");
+    }
+}
+
+==============================================================
+
+Resolution of Diamond Problem in context of Default methods :
+-------------------------------------------------------------
+Ex: (Multiple Inheritance)
+===
+interface A {
+    default void m1() {
+    -------
+      System.out.println("I am default method");
+    }
+}
+
+interface B {
+    default void m1() {
+   --------
+      System.out.println("I am default method");
+    }
+}
+
+class Test implements A, B {
+// complier is unable to find out which m1() has to be overridden, so compile time error
+}
+
+In order to solve this ambiguity & make compiler happy,
+ either we can provide our own implementation of m1() or
+ provide the reference of the interface whom method m1() needs to be overridden.
+ For example, observe the code below:
+
+Solution #1
+============
+class Test implements A, B {
+    public void m1() {
+      System.out.println("I have my own implementation, I am not copy of default m1()");
+    }
+}
+
+
+Solution #2
+=============
+class Test implements A, B {
+    public void m1() {
+      A.super.m1(); //I want to override m1() of interface A
+    }
+}
+

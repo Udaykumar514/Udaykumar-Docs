@@ -1,0 +1,42 @@
+Java 8 Features Example of Functional Interfaces : 
+
+Functional Interfaces : 
+=======================
+If an interface contains only "one abstract method", such type of interface is called functional interface 
+and the contained method is called functional method or single abstract method (SAM).
+Functional interfaces provide target types for lambda expressions and method references. 
+One separate package java.util.Function has been introduced for Functional Interfaces.
+
+
+Examples of Functional Interfaces:
+=====================================
+Runnable : contains only run() method
+Comparable : contains only compareTo() method
+ActionListener : contains only actionPerformed()
+Callable : contains only call() method 
+
+How to write a Functional Interface : 
+========================================
+In addition to having only one abstract method, we must write "@Functional Interface annotation" 
+to specify that the interface is a Functional Interface. If you add annotation @Functional Interface, 
+compiler will not let you add any other abstract method inside it.
+
+Example
+========
+//This is a Functional Interface
+@FunctionalInterface  
+interface FunctionalInterface1 {
+		
+	public void m1();
+
+}
+
+
+//This is not a Functional Interface. This code will show compilation error
+@FunctionalInterface  
+interface NonFunctionalInterface2 {
+		
+	public void m1();
+	public void m2();
+
+}

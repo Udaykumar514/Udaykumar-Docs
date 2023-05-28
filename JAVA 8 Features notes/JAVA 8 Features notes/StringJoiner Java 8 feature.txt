@@ -1,0 +1,25 @@
+https://javatechonline.com/java-8-features/
+
+Java 8 features "StringJoiner"
+==============================
+StringJoiner is a new class added in Java 8 under java.util package.
+In fact, we can use it for joining Strings by making use of a delimiter, prefix, and suffix. 
+It comes with below two constructors.
+
+StringJoiner(CharSequence delimiter)
+StringJoiner(CharSequence delimiter, CharSequence prefix, CharSequence suffix)
+
+Ex:("StringJoiner")
+====================
+private static String PREFIX = "{";
+private static String SUFFIX = "}";
+
+StringJoiner joiner = new StringJoiner(", ", PREFIX, SUFFIX);
+   joiner.add("Core Java")
+         .add("Spring Boot")
+         .add("Angular");
+System.out.println(joiner.toString());
+
+Output:
+=======
+{Core Java, Spring Boot, Angular}

@@ -1,0 +1,36 @@
+1 What is Functional Programming in Java 8 Features and Its Benefits?
+2 What are the newly introduced Java 8 Features?
+2.1 Changes in Language :
+2.2 Changes in Java Compiler :
+2.3 New features in Java libraries: 
+2.4 New Java Tools
+2.5 New Features in java runtime(JVM)
+
+3 The Lambda (λ) Expression: 
+3.1 How to write Lambda Expressions :
+3.2 Note on Lambda Expressions:
+4 Functional Interfaces : 
+4.0.1 Examples of Functional Interfaces:
+4.1 How to write a Functional Interface : 
+5 Default Method in Interface
+6 Static Methods In Interface
+7 Method References
+8 Optional 
+8.1 Creating Optional object
+9 Stream
+9.1 How to create Streams
+9.1.1 Empty Stream
+9.1.2 Stream of Array
+9.1.3 Stream of Collection
+9.1.4 Stream of Primitives
+9.1.5 Stream of String
+9.1.6 Stream via Stream.generate()
+9.1.7 Stream via Stream.builder()
+9.1.8 Stream via Stream.iterate()
+9.1.9 Stream of a File
+
+10 Date/Time API (JSR 310)
+10.1 Classes in Date/Time API 
+11 StringJoiner
+11.1 Example Of StringJoiner
+11.1.1 Output

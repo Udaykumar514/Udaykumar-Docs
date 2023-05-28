@@ -1,0 +1,54 @@
+//Code without using Lambda Expressions
+Thread t = new Thread(new Runnable() {
+   public void run() {
+     for (int i = 0; i < 10; i++) {
+        System.out.println("Child thread is running");
+     }
+   }
+}); 
+
+                       ⇓ 
+
+//Code after using Lambda expression
+Thread t = new Thread(() -> {
+   for (int i = 0; i < 10; i++) {
+      System.out.println("Child thread is running");
+   }
+});
+
+=========================================
+Java 8 Features Example of Lamda Expressions 
+
+Normal Java Method
+===================
+private void add(int i, int j){
+System.out.println(i+j);
+}
+
+How to write Lambda Expressions?
+
+Step#1 : first, remove the access modifier
+=============================================
+    void add(int i, int j) { System.out.println(i+j); }
+
+Step#2 : next remove the return type
+=============================================
+    add(int i, int j) { System.out.println(i+j); }
+
+Step#3 : then, remove the method name
+=============================================
+   (int i, int j) { System.out.println(i+j); }
+
+Step#4 : insert arrow sign (->) between remaining method declaration & body
+========================================================
+    (int i, int j) ->{ System.out.println(i+j); }
+
+Step#5 : If compiler is able to identify the type of parameters, remove them as well
+======================================================
+    (i, j) ->{ System.out.println(i+j); }
+
+Now our Expression simplifies to :
+
+ (i, j) ->{ System.out.println(i+j); }  -----> Lamda Expression
+
+

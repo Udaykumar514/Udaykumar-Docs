@@ -1,0 +1,40 @@
+https://javatechonline.com/java-8-features/
+
+Java 8 features "Date"
+======================
+Date/Time API
+==============
+Java 8 has come with a new date and time API in java.
+time that offers greatly improved safety and functionality for developers. 
+The new API models the domain well,
+with a good selection of classes for modeling a wide variety of developer use cases.
+
+Classes in Date/Time API 
+-------------------------
+Class 		Purpose
+=======		====================================
+LocalDate	 Displays only date (no offset or zone)
+LocalTime	 Displays only time (no offset or zone)
+LocalDateTime	 Displays date and time (no offset or zone)
+OffsetDate	 Displays a date with an offset like +05:30
+OffsetTime	 Displays time with an offset like +05:30
+OffsetDateTime	 Displays date and time with an offset
+ZonedDateTime	 Displays date and time with offset and time zone
+YearMonth	 Displays a year and month
+MonthDay	 Displays month and day
+
+Period	 Displays a defined time (such as 1 week)
+
+These types can be mapped to vendor-specific database types or ANSI SQL types; 
+for example, the ANSI mapping looks like Table below.
+
+ANSI SQL 		Java SE 8
+=========		==========
+DATE			LocalDate
+TIME			LocalTime
+TIMESTAMP		LocalDateTime
+TIME WITH TIMEZONE	OffsetTime
+TIMESTAMP WITH TIMEZONE	OffsetDateTime
+
+
+==================******************=========================================

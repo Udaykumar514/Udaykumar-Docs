@@ -1,0 +1,233 @@
+https://javatechonline.com/method-reference-java-8/
+
+Java 8 Features Example of "Method References"
+===================================================
+
+What is Method Reference(::)?
+------------------------------
+As we have seen in Lambda expression topic that we use lambda expressions to implement Functional interfaces
+with minimum lines of code and even to get better code readability.
+Similarly, we can use Method Reference(::) 
+Java 8 to implement Functional interfaces with even lesser code again than lambda expressions
+and this time we get the benefit of code re-usability as well, 
+because we don’t provide an implementation for functional interface.
+Instead, we provide reference to already existing method (with similar argument types) to simplify the implementation of the functional interface using a double colon (::) operator. 
+This process of providing reference to pre-existing method is called Method reference.
+
+Ex:
+====
+
+interface A {
+	public void getName(String name);
+}
+
+public class Test {
+
+	public static void getInfo(String info) {
+		System.out.println(info);
+	}
+
+	public static void main(String[] args) {
+		A a = (String s) -> System.out.println(s); //providing implementation of getName(String name) using Lambda Expression
+		a.getName("SAM is executing");
+
+		A a1 = Test::getInfo; // refering to pre-existing getInfo(String info) of class Test as arguments are same as getName(String name)
+		a1.getName("getInfo() of Test class is executing");
+	}
+}
+
+Syntax to write "Method References"
+===================================
+
+Before knowing how to write them, let’s first categorize the Method Reference(::) Java 8. Here,
+syntax to write Method Reference(::) Java 8 is different in different cases. 
+In general, we can provide Method references in "three" ways, sometimes called the types of it.
+
+1)Static Method References
+2)Instance method/non-static Method References
+3)Constructor References
+
+1)Ex Method reference to a "static method" of a class :
+========================================================
+interface A {
+	public boolean checkSingleDigit(int x);
+}
+
+class Digit {
+	public static boolean isSingleDigit(int x) {
+	    return x > -10 && x < 10;
+	}
+}
+
+public class TestStaticMethodReference {
+
+	public static void main(String[] args) {
+		
+		//*** Using Lambda Expression ***//
+		A a1 = (x) -> { return x > -10 && x < 10;};
+		System.out.println(a1.checkSingleDigit(10));
+		
+		//*** Using Method Reference ***//
+		A a2 = Digit::isSingleDigit;
+		System.out.println(a2.checkSingleDigit(9));
+	}
+}
+
+2)Ex Method reference to a "Instance method" of a class :
+========================================================
+
+interface B {
+    public  void add(int x, int y);
+}
+
+class Addition {
+	public void sum(int a, int b) {
+	    System.out.println("The sum is :"+(a+b));
+	}
+}
+
+public class TestInstanceMethodReference {
+
+	public static void main(String[] args) {
+		
+		Addition addition = new Addition();
+		//*** Using Lambda Expression ***//
+		B b1 = (a,b) -> System.out.println("The sum is :"+(a+b));
+		b1.add(10, 14);
+		
+		//*** Using Method Reference ***//
+		B b2 = addition::sum;
+		b2.add(100, 140);
+	}
+}
+
+
+3)Ex Method reference to a "Constructor Reference" of a class :
+================================================================
+When single abstract method’s return type is any Object, we will go with the constructor reference.
+
+interface C {
+	public Employee getEmployee();
+}
+
+interface D {
+	public Employee getEmployee(String name, int age);
+}
+
+class Employee {
+	String eName;
+	int eAge;
+	
+	public Employee(){} 
+	
+	public Employee(String eName, int eAge) {
+		this.eName = eName;
+		this.eAge = eAge;
+	}
+	
+	public void getInfo() {
+		System.out.println("I am a method of class Employee");
+	}
+}
+
+public class TestConstructorReference {
+
+	public static void main(String[] args) {	
+		
+		//*** Using Lambda Expression ***//
+		C c1 = () -> new Employee();
+		c1.getEmployee().getInfo();
+		D d1 = (name,age) -> new Employee(name,age);
+		d1.getEmployee("Tony", 34).getInfo();
+		
+		//*** Using Method Reference ***//
+		C c2 = Employee::new;
+		c2.getEmployee().getInfo();
+		D d2 = Employee::new;
+		d2.getEmployee("Tony", 34).getInfo();
+	}
+}
+
+Example of Reference to an Instance Method of an Arbitrary Object of a Particular Type
+==========================================================================================
+This type of Instance methods refers to a non-static method that are not bound to a receiver object.
+In this case we don’t need to create an object of a particular type.
+
+public class TestArbitraryObjectMethodReference {
+
+	public static void main(String[] args) {	
+		
+		List<Integer> numbers = Arrays.asList(15, 33, 59, 24, 40, 2, 19, 25,60);
+		
+		//*** Using Anonymous Inner class ***//
+		Collections.sort(numbers, new Comparator<Integer>() {
+			public int compare(Integer i1,Integer i2) {
+				return i1.compareTo(i2);
+			}
+		});
+		System.out.println("************* Using Anonymous Inner class ***************");
+		numbers.forEach(System.out::println);
+		
+		//*** Using Lambda Expression ***//
+		System.out.println("************* Using Lambda Expression *******************");
+		Collections.sort(numbers,(i1,i2) ->i1.compareTo(i2));
+		numbers.forEach(System.out::println);
+		
+		//*** Using Method Reference ***//
+		System.out.println("************* Using Method reference ********************");
+		Collections.sort(numbers,(Integer::compareTo));
+		numbers.forEach(System.out::println);
+	}
+}
+
+
+Reference to super class & child class method using super & this keyword
+========================================================================
+Ex:
+===
+interface A {
+	public void sayHello();
+}
+
+class SuperClass {
+	public void superHello(){
+		System.out.println("I am inside SuperTest class");
+	}
+}
+
+class ChildClass extends SuperClass{
+	
+	public void childHello() {
+		System.out.println("I am inside SubTest class");
+	}
+	
+	public void testHello() {
+		
+		//***Using Method reference :super class method***//
+		A a1= super::superHello;
+		a1.sayHello();
+		
+		//***Using Lambda Expression :super class method***//
+		A a3= () -> System.out.println("I am inside SuperTest class");
+		a3.sayHello(); 
+		
+		//***Using Method reference :current class method***//
+		A a2= this::childHello;
+		a2.sayHello();
+		
+		//***Using Lambda Expression :current class method***//
+		A a4= () -> System.out.println("I am inside SubTest class");
+		a4.sayHello();
+	}
+}
+
+public class Test {
+
+	public static void main(String[] args) {	
+		
+		ChildClass t = new ChildClass();
+		t.testHello();
+	}
+}
+
+============================================================

@@ -1,0 +1,34 @@
+https://javatechonline.com/method-reference-java-8/
+
+Java 8 Features Example of "Optional"
+=====================================
+It is also one of the most interesting feature among all newly introduced Java 8 Features. 
+Optional is a new class under package java.util. 
+The purpose of this call is to "address the infamous NullPointerException".
+Many people in the industry believe that you are not a real Java programmer until you’ve dealt with a NullPointerException. 
+Since NullPointerException indicates the absence of a value, the null reference is the source of many problems.
+So, Optional class can address some of these problems.
+Java SE 8 introduces a new class called java.util.Optional<T> that is inspired from the ideas of Haskell and Scala. It is a class that encapsulates an optional value. In a nutshell, Optional is a single-value container that either contains a value or doesn’t (it is then said to be “empty”).
+The Optional class includes methods to explicitly deal with the cases where a value is present or absent.
+
+
+Creating Optional objects
+===========================
+For example, below code creates an empty Optional.
+=================================================
+Optional<Employee> emp = Optional.empty();
+
+
+And here is an Optional with a non-null value:
+===============================================
+Employee employee = new Employee();
+Optional<Employee> emp = Optional.of(employee);
+
+Also, by using ofNullable, you can create an Optional object that may hold a null value
+========================================================================================
+Optional<Employee > emp = Optional.ofNullable(Employee);
+
+Note: You should only use of() when you are sure the object is not null. 
+If the object can be both null or not-null, then you should instead choose the ofNullable() method.
+
+===================================================================================================

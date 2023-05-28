@@ -1,0 +1,898 @@
+https://javatechonline.com/stream-api-in-java-8/
+
+JAVA 8 Features of Stream API
+==============================
+Stream
+=======
+The Stream also comes under another important Java 8 Features. 
+A stream is nothing, but a sequence of objects.
+It offers us various methods to produce the desired result in minimum lines of code.
+Stream takes inputs from Collections, Arrays or I/O channels and provides the result as per the pipelined methods,
+but don’t change the original data structure.
+
+What are the ways of creating a Stream in Java?
+=================================================
+There are several ways to create a Stream in Java. Let’s learn them one by one.
+
+1) Using Stream.of() method 
+==============================
+The Stream.of() method takes a variable argument list of elements: static <T> Stream<T> of(T… values)
+
+Ex:
+====
+Stream<String> streamOfStrings =  Stream.of("Sunday", "Monday", "Wednesday", "Friday");
+
+Stream<Integer> streamOfIntegers = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+Integer[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+Stream<Integer> streamOfArrayOfIntegers = Stream.of(array);
+
+
+2) Stream from a Collection using stream() & parallelStream() methods 
+=======================================================================
+java.util.Collection interface has stream() and parallelStream() methods 
+to create sequential and parallel streams respectively.
+These methods return a stream of elements over the collection on which it is invoked.
+
+Ex:
+===
+List<String> list = Arrays.asList("https://","javatechonline", "dot", "com"); //creating a list
+//OR
+List<String> list = List.of("https://","javatechonline", "dot", "com"); //creating a list using of() of JDK 9
+
+Stream<String> streamofStrings = list.stream(); // creating a sequential stream (used most of the time)
+Stream<String> streamofStrings = list.parallelStream(); // creating a parallel stream
+
+
+3) Stream from an Array using Arrays.stream()
+===============================================
+We can also create a stream from an Array using stream() method of java.util.Arrays class 
+which accepts an array as argument as shown below.
+
+Ex:
+===
+String[] arr= new String[] { "a", "b", "c" };
+
+Stream<String> streamOfStrings = Arrays.stream(arr);
+
+4) Stream using Stream.builder()
+====================================
+We can create a Stream using builder() method. 
+In order to get a stream builder, invoke the static builder() method. 
+This method returns an object of type java.util.stream.Stream.Builder.
+This builder object is then used to add elements to the stream using add method 
+and then create the stream using build() method as shown below.
+
+Ex:
+===
+Builder<String> builder = Stream.<String>builder(); // creating a builder
+builder.add("a").add("b").add("c"); // adding elements
+Stream<String> s = builder.build(); // creating stream
+
+We can reduce above code to a one-liner as below:
+
+Stream<String> s = Stream.<String>builder().add("a").add("b").add("c").build();
+
+5)Creating an Empty Stream using Stream.empty()
+=================================================
+An empty stream is a stream that does not contain any elements.
+It can be created using empty() method from java.util.stream.Stream interface.
+empty is a static interface method and returns a stream object with no elements.
+We use the empty() method to avoid returning null for streams with no element.
+In other words, Empty stream is generally used to return an object from a method that returns a stream instead of 
+returning null so as to avoid NullPointerException later as shown below.
+
+Ex:
+===
+Stream<String>  emptyStream = Stream.empty();
+
+6)Creating an infinite Stream using Stream.generate() method
+===============================================================
+The generate() method accepts a Supplier for generating elements and results as on infinite stream.
+So, to restrict it, we should specify the desired size or the generate() method will work until 
+it reaches the memory limit. For example, below code generates a stream of 5 integers.
+
+Ex:
+===
+Random random = new Random();
+Stream<Integer> stream = 
+                 Stream.generate(
+                   () -> {return random.nextInt(100);} // generating random numbers between 0 and 99
+                 ).limit(5);
+
+7) Creating an infinite Stream using Stream.iterate() method
+================================================================
+There is another way of creating an infinite stream using iterate() method.
+
+For example, if we want to create a stream of odd numbers, we would do it as below:
+============
+Stream<Integer> streamOfOddNumbers = Stream.iterate(1, n -> n + 2);
+
+iterate() takes a seed or starting value as the first parameter.
+This is the first element that will be part of the stream. 
+The other parameter is a lambda expression that gets passed the previous value and generates the next value.
+In this example, the next value after 1 will be 3. As with the random numbers example, 
+it will keep on producing odd numbers as long as you need them.
+
+8) Creating Stream of a File
+==============================
+Moreover, Java NIO class Files (java.nio.file.Files) allows us to generate a Stream<String> of a text file through its static method lines().
+Every line of the text becomes an element of the stream. 
+This stream can then be iterated to read the contents of the file line by line as shown below.
+
+Ex:
+====
+Stream<String> streamOfStrings  = Files.lines(Paths.get(filePath));   // Generating Stream from a File
+
+streamOfStrings.forEach((line) -> System.out.println(line));          // Printing contents of the File
+
+Furthermore, we can specify the Charset as an argument of the lines() method as below.
+Ex:
+===
+Stream<String> streamWithCharset = Files.lines(path, Charset.forName("UTF-8"));
+
+What is Stream of Primitives and Why?
+=========================================
+As we know that the Streams primarily work with collections of objects. 
+Moreover, Stream<T> is a generic interface, and there is no way to use primitives as a type parameter with generics.
+Therefore, three new special interfaces were created: 
+IntStream, LongStream, DoubleStream for three primitive types: integer, long and double respectively.
+Furthermore, using the new interfaces reduces needless auto-boxing, which allows for increased productivity. 
+IntStream and LongStream each have two additional factory methods for creating streams, range and rangeClosed. Their method signatures are similar:
+
+static IntStream range(int startInclusive, int endExclusive)
+static IntStream rangeClosed(int startInclusive, int endInclusive)
+static LongStream range(long startInclusive, long endExclusive)
+static LongStream rangeClosed(long startInclusive, long endInclusive)
+
+
+How to convert from a Stream to a Collection?
+=================================================
+We can convert from a Stream to a Collection using one of the static methods in the Collectors class.
+
+Example#1: Converting a Stream of strings to a List
+==========
+List<String> strings = Stream.of("this", "is", "a", "list", "of", "strings")
+                        .collect(Collectors.toList());
+
+Example#2: Converting a Stream of int to a List of Integer
+===========
+List<Integer> ints = IntStream.of(1, 2, 3, 4, 5, 6)
+                      .collect(Collectors.toList()); // does not compile
+
+
+However, we have multiple ways to make it work as shown below.
+
+1) Using the boxed method : boxed() method converts int to Integer. We can use the boxed method on Stream to convert the IntStream to a Stream<Integer> as shown below:
+==========================
+List<Integer> ints = IntStream.of(1, 2, 3, 4, 5, 6)
+                     .boxed()
+                     .collect(Collectors.toList());
+
+2) Using the mapToObj method : The mapToObj() method converts each element from a primitive to an instance of the wrapper class as below:
+==============================
+List<Integer> ints = IntStream.of(1, 2, 3, 4, 5, 6)
+                     .mapToObj(Integer::valueOf) 
+                     .collect(Collectors.toList());
+
+Example#3: Converting an IntStream to an int array
+===========
+int[] intArray = IntStream.of(1, 2, 3, 4, 5, 6).toArray();
+// OR
+int[] intArray = IntStream.of(1, 2, 3, 4, 5, 6).toArray(int[]::new);
+
+
+How to print a Stream?
+=======================
+When our code doesn’t work as expected, either we add a println() statement
+or go with setting a breakpoint to see the values of an object.
+Since intermediate operations don’t return something until needed,
+printing is not a straightforward process with the streams. Therefore, 
+we need to apply some particular approaches to print the values. You will find that you have less requirement to print out the values of a stream as you get more practice with stream pipelines. 
+However, while learning, printing is really helpful in order to debug the expected results using stream API in Java 8.
+
+Below are some approaches to print streams:
+===========================================
+1) s.forEach(System.out::println);
+
+2) System.out.println(s.collect(Collectors.toList()));
+
+3) s.limit(4).forEach(System.out::println);
+
+4) s.peek(System.out::println).count();
+
+How to use Stream Intermediate Operations?
+============================================
+Let’s start learning intermediate operations one by one under stream API in Java 8.
+
+filter( )
+==========
+Method signature:  Stream<T> filter(Predicate<? super T> predicate)
+
+When to use filter( )? 
+=========================
+If you want to return a stream from another stream that satisfies a given condition.
+
+Ex:
+===
+Stream<String> s = Stream.of("lion", "cat", "monkey", "cow", "horse");
+ s.filter(x -> x.startsWith("c")).forEach(System.out::print); 
+
+Output
+======
+catcow
+
+distinct( )
+===============
+Method signature:  Stream<T> distinct()
+
+When to use distinct( )? 
+============================
+If you want to return a stream from another stream with duplicate values removed.
+For example, observe the below code:
+
+Example
+=========
+Stream<String> s = Stream.of("cat", "cat", "monkey", "cow", "cat");
+ s.distinct().forEach(System.out::print); 
+
+Output
+=========
+monkeycow
+
+limit( ) and skip( )
+=======================
+Method signature: Stream<T> limit(int maxSize)
+                              Stream<T> skip(int n)
+
+When to use limit( ) and skip( )? 
+===================================
+If you want to make your stream smaller. Also, if you want to make a finite stream out of an infinite stream.
+
+Example
+=======
+Stream<Integer> s = Stream.iterate(1, n -> n + 1); 
+ s.skip(9).limit(6).forEach(System.out::print);  
+
+Output
+======
+101112131415 
+
+
+You are hereHome > java >
+Stream API In Java 8
+javaCore JavaStream APIby devs5003 - September 11, 20213
+Stream API in Java 8Data Processing is the dominant part of a Software Application. As a developer, we can’t think of developing an application without data processing logics. However, almost every Java Application uses Collections API to store and process data. Using Collections API, it is not so easy to write the codes for even some common data processing operations such as filtering, sorting, matching, finding, mapping etc. That’s why Java API designers have come up with Stream API in Java 8 to implement more complex data processing logics with the least number of lines of code. So, in this article, we are going to learn Stream API in Java 8 and how to work with the complex data processing operations in an easy way.
+
+In this article, we will start with the fundamentals of Stream API in Java 8 and then move forward with the common operations that saves developer effort while implementing data processing logics. Let’s continue learning ‘Stream API in Java 8’ and its related concepts step by step.
+
+
+Table of Contents (Click on links below to navigate) [hide]
+
+1 What is the prerequisite to learn Stream API in Java 8? 
+2 What is Stream API in Java 8?
+3 What are the Characteristics of Stream API?
+4 What are the ways of creating a Stream in Java?
+4.1 1) Using Stream.of() method 
+4.2 2) Stream from a Collection using stream() & parallelStream() methods 
+4.3 3) Stream from an Array using Arrays.stream()
+4.4 4) Stream using Stream.builder()
+4.5 5) Creating an Empty Stream using Stream.empty()
+4.6 6) Creating an infinite Stream using Stream.generate() method
+4.7 7) Creating an infinite Stream using Stream.iterate() method
+4.8 8) Creating Stream of a File
+5 What is Stream of Primitives and Why?
+6 How to convert from a Stream to a Collection?
+6.1 Example#1: Converting a Stream of strings to a List
+6.2 Example#2: Converting a Stream of int to a List of Integer
+6.3 Example#3: Converting an IntStream to an int array
+7 What are the major operations supported by Stream API?
+7.1 Intermediate Operations
+7.2 Terminal Operations
+8 What is Stream Pipeline?
+9 How to print a Stream?
+10 How to use Stream Intermediate Operations?
+10.1 filter( )
+10.1.1 When to use filter( )? 
+10.1.2 Example
+10.1.3 Output
+10.2 distinct( )
+10.2.1 When to use distinct( )? 
+10.2.2 Example
+10.2.3 Output
+10.3 limit( ) and skip( )
+10.3.1 When to use limit( ) and skip( )? 
+10.3.2 Example
+10.3.3 Output
+10.4 map( ) vs flatMap( ) 
+10.4.1 When to use map( ) and flatMap( )? 
+10.4.2 What is the difference between map( ) and flatMap( )? 
+10.4.3 Example
+10.4.4 Output after applying map( )
+10.4.5 Output after applying flatMap( )
+10.5 sorted( )
+10.5.1 When to use sorted( )? 
+10.5.2 Example
+10.5.3 Output
+10.6 peek() 
+10.6.1 When to use peek( )? 
+10.6.2 Example
+10.6.3 Output
+11 How to use Stream Terminal Operations?
+11.1 count( )
+11.1.1 When to use count( )? 
+11.1.2 Example
+11.1.3 Output
+11.2 min( ) and max( )
+11.2.1 When to use min( ) and max( )? 
+11.2.2 Example
+11.2.3 Output
+11.3 findAny( ) and findFirst( )
+11.3.1 When to use findAny( ) and findFirst( )? 
+11.3.2 Example
+11.3.3 Output
+11.3.4 Output
+11.4 anyMatch( ), allMatch( ), and noneMatch( )
+11.4.1 When to use anyMatch( ), allMatch( ), and noneMatch( )? 
+11.4.2 Example
+11.4.3 Output
+11.5 forEach( )
+11.5.1 When to use forEach( )? 
+11.5.2 Example
+11.5.3 Output
+11.6 collect( )
+11.6.1 When to use collect( )? 
+11.6.2 Example
+11.6.3 Output
+11.6.4 Output
+11.7 reduce()
+11.7.1 When to use reduce( )? 
+11.7.2 Example#1
+11.7.3 Output
+11.7.4 Example#2
+12 Conclusion
+What is the prerequisite to learn Stream API in Java 8? 
+The stream API in Java 8 makes extensive use of built-in (predefined) functional interfaces that are part of the java.util.function package. So, we suggest you to have a clear understanding of the built-in (predefined) functional interfaces in advance before attempting to learn Stream API in Java 8. Moreover, it is expected that you have knowledge of the Lambda Expressions which is also a part of new feature introduced in Java 8.
+
+What is Stream API in Java 8?
+A stream in Java 8 is a sequence of data. It helps us in performing various operations with the data. This data can be obtained from several sources such as Collections, Arrays or I/O channels. There are two types of Stream: Sequential and Parallel. We can perform sequential operations when we obtain a stream using the stream() method, and parallel operations with parallelStream() method. Furthermore, in order to support these operations on the data obtained from various collections, the Collection interface has been added with the two new methods stream() and parallelStream() in Java 8. Since interfaces such as List, Set, Deque, and Queue extend the Collection interface, we can get a stream or a parallel stream from the collection classes that implement these interfaces. For example, we can get a stream from an ArrayList object.
+
+
+The most common source of streams is collection objects such as sets, maps, and lists. However, note that we can even use the streams API independent of the collections.
+
+What are the Characteristics of Stream API?
+1) We can create a stream from a source, perform operations on it and produce the result. The source may be a collection or an array or an I/O resource. The Stream does never modify the source.
+2) Remember that Streams doesn’t store the data. We can’t add or remove elements from streams. Therefore, we can’t call them the data structures. They do only operations on the data.
+3) Stream’s operations are primarily divided into two categories: Intermediate operations & Terminal operations.
+4) Stream works on a concept of ‘Pipeline of Operations’. A pipeline of operations consists of three things : a source, zero or more intermediate operations and a terminal operation.
+
+
+
+5) In order to gain the performance while processing the large amount of data, Stream has a concept of parallel processing without writing any multi threaded code.
+6) All elements of a stream are not populated at a time. They are lazily populated as per demand because intermediate operations are not evaluated until terminal operation is invoked.
+7) Generally, we can’t use the same stream more than once. If we use the stream first time, it is said to be consumed.
+
+What are the ways of creating a Stream in Java?
+There are several ways to create a Stream in Java. Let’s learn them one by one.
+
+1) Using Stream.of() method 
+The Stream.of() method takes a variable argument list of elements: static <T> Stream<T> of(T… values)
+
+
+Stream<String> streamOfStrings =  Stream.of("Sunday", "Monday", "Wednesday", "Friday");
+Stream<Integer> streamOfIntegers = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
+Integer[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+Stream<Integer> streamOfArrayOfIntegers = Stream.of(array);
+2) Stream from a Collection using stream() & parallelStream() methods 
+java.util.Collection interface has stream() and parallelStream() methods to create sequential and parallel streams respectively. These methods return a stream of elements over the collection on which it is invoked.
+
+List<String> list = Arrays.asList("https://","javatechonline", "dot", "com"); //creating a list
+//OR
+List<String> list = List.of("https://","javatechonline", "dot", "com"); //creating a list using of() of JDK 9
+
+Stream<String> streamofStrings = list.stream(); // creating a sequential stream (used most of the time)
+Stream<String> streamofStrings = list.parallelStream(); // creating a parallel stream
+3) Stream from an Array using Arrays.stream()
+We can also create a stream from an Array using stream() method of java.util.Arrays class which accepts an array as argument as shown below.
+
+String[] arr= new String[] { "a", "b", "c" };
+
+Stream<String> streamOfStrings = Arrays.stream(arr);
+The Stream.of() and Arrays.stream() are two commonly used methods for creating a sequential stream from a specified array. Both these methods return a Stream when called with a non-primitive type T.
+
+4) Stream using Stream.builder()
+We can create a Stream using builder() method. In order to get a stream builder, invoke the static builder() method. This method returns an object of type java.util.stream.Stream.Builder. This builder object is then used to add elements to the stream using add method and then create the stream using build() method as shown below.
+
+
+
+Builder<String> builder = Stream.<String>builder(); // creating a builder
+builder.add("a").add("b").add("c"); // adding elements
+Stream<String> s = builder.build(); // creating stream
+We can reduce above code to a one-liner as below:
+
+Stream<String> s = Stream.<String>builder().add("a").add("b").add("c").build(); 
+5) Creating an Empty Stream using Stream.empty()
+An empty stream is a stream that does not contain any elements. It can be created using empty() method from java.util.stream.Stream interface.
+empty is a static interface method and returns a stream object with no elements. We use the empty() method to avoid returning null for streams with no element. In other words, Empty stream is generally used to return an object from a method that returns a stream instead of returning null so as to avoid NullPointerException later as shown below.
+
+Stream<String>  emptyStream = Stream.empty();
+6) Creating an infinite Stream using Stream.generate() method
+The generate() method accepts a Supplier for generating elements and results as on infinite stream. So, to restrict it, we should specify the desired size or the generate() method will work until it reaches the memory limit. For example, below code generates a stream of 5 integers.
+Random random = new Random();
+Stream<Integer> stream = 
+                 Stream.generate(
+                   () -> {return random.nextInt(100);} // generating random numbers between 0 and 99
+                 ).limit(5);
+Please Note that generate() accepts an argument of type java.util.function.Supplier which is a functional interface and hence we can implement it using a Lambda expression as shown above.
+7) Creating an infinite Stream using Stream.iterate() method
+There is another way of creating an infinite stream using iterate() method.
+
+For example, if we want to create a stream of odd numbers, we would do it as below:
+
+Stream<Integer> streamOfOddNumbers = Stream.iterate(1, n -> n + 2);
+iterate() takes a seed or starting value as the first parameter. This is the first element that will be part of the stream. The other parameter is a lambda expression that gets passed the previous value and generates the next value. In this example, the next value after 1 will be 3. As with the random numbers example, it will keep on producing odd numbers as long as you need them.
+
+8) Creating Stream of a File
+Moreover, Java NIO class Files (java.nio.file.Files) allows us to generate a Stream<String> of a text file through its static method lines(). Every line of the text becomes an element of the stream. This stream can then be iterated to read the contents of the file line by line as shown below.
+
+Stream<String> streamOfStrings  = Files.lines(Paths.get(filePath));   // Generating Stream from a File
+streamOfStrings.forEach((line) -> System.out.println(line));          // Printing contents of the File
+Furthermore, we can specify the Charset as an argument of the lines() method as below.
+Stream<String> streamWithCharset = Files.lines(path, Charset.forName("UTF-8"));
+What is Stream of Primitives and Why?
+As we know that the Streams primarily work with collections of objects. Moreover, Stream<T> is a generic interface, and there is no way to use primitives as a type parameter with generics. Therefore, three new special interfaces were created: IntStream, LongStream, DoubleStream for three primitive types: integer, long and double respectively. Furthermore, using the new interfaces reduces needless auto-boxing, which allows for increased productivity. IntStream and LongStream each have two additional factory methods for creating streams, range and rangeClosed. Their method signatures are similar:
+
+static IntStream range(int startInclusive, int endExclusive)
+static IntStream rangeClosed(int startInclusive, int endInclusive)
+static LongStream range(long startInclusive, long endExclusive)
+static LongStream rangeClosed(long startInclusive, long endInclusive)
+The arguments show the difference between the two: rangeClosed includes the end value, and range doesn’t. Each returns a sequential, ordered stream that starts at the first argument and increments by one after that.
+
+How to convert from a Stream to a Collection?
+We can convert from a Stream to a Collection using one of the static methods in the Collectors class.
+
+Example#1: Converting a Stream of strings to a List
+List<String> strings = Stream.of("this", "is", "a", "list", "of", "strings")
+                        .collect(Collectors.toList());
+Example#2: Converting a Stream of int to a List of Integer
+List<Integer> ints = IntStream.of(1, 2, 3, 4, 5, 6)
+                      .collect(Collectors.toList()); // does not compile
+However, we have multiple ways to make it work as shown below.
+
+
+1) Using the boxed method : boxed() method converts int to Integer. We can use the boxed method on Stream to convert the IntStream to a Stream<Integer> as shown below:
+
+List<Integer> ints = IntStream.of(1, 2, 3, 4, 5, 6)
+                     .boxed()
+                     .collect(Collectors.toList());
+2) Using the mapToObj method : The mapToObj() method converts each element from a primitive to an instance of the wrapper class as below:
+
+
+
+List<Integer> ints = IntStream.of(1, 2, 3, 4, 5, 6)
+                     .mapToObj(Integer::valueOf) 
+                     .collect(Collectors.toList());
+Just as mapToInt, mapToLong, and mapToDouble parse streams of objects into the associated primitives, the mapToObj method from IntStream, LongStream, and Double Stream converts primitives to instances of the associated wrapper classes. The argument to mapToObj in this example uses the Integer constructor.
+
+In JDK 9, the Integer(int val) constructor is deprecated for performance reasons. The recommendation is to use Integer.valueOf(int) instead.
+
+
+Example#3: Converting an IntStream to an int array
+int[] intArray = IntStream.of(1, 2, 3, 4, 5, 6).toArray();
+// OR
+int[] intArray = IntStream.of(1, 2, 3, 4, 5, 6).toArray(int[]::new);
+Here, the first demo uses the default form of toArray, which returns Object[]. The second uses an IntFunction<int[]> as a generator, which creates an int[] of the proper size and populates it.
+
+What are the major operations supported by Stream API?
+The Stream API in Java 8 primarily categorizes two types of operations: Intermediate Operations and Terminal Operations
+
+
+
+Intermediate Operations
+When an operation on a stream further produces another stream as a result, we call it an intermediate operation. As intermediate operations return another stream as a result, they can be chained together to form a pipeline of operations. As the word ‘intermediate’ suggest, these operations doesn’t give end result. They just convert one stream to another stream. For example: map(), filter(), distinct(), sorted(), limit(), skip()
+
+Terminal Operations
+The operations which return non-stream values such as primitive or object are called terminal operations. Furthermore, unlike terminal operations, we can’t chain them together. They produce the end result. Once a terminal operation completes, the Stream is no longer valid. Hence, we can’t use that stream again. For example : forEach(), toArray(), reduce(), collect(), min(), max(), count(), anyMatch(), allMatch(), noneMatch(), findFirst(), findAny()
+
+
+Note: Stream processing consists of a series of zero or more intermediate operations followed by a terminal operation. Each intermediate operation returns a new stream. The terminal operation returns something other than a stream.
+
+What is Stream Pipeline?
+Stream API in Java 8 works with a concept of Stream Pipeline. There are three parts to a Stream Pipeline.
+
+Source: Where the stream comes from.
+
+Intermediate Operations: Transforms the stream into another one. There can be as few or as many intermediate operations as you’d like. Since streams use lazy evaluation, the intermediate operations do not run until the terminal operation runs.
+
+
+Terminal Operations: Actually produces a result. Since streams can be used only once, the stream is no longer valid after a terminal operation completes.
+
+Pipeline of operations may contain any number of intermediate operations, but there has to be only one terminal operation, that too at the end of pipeline. Moreover, Intermediate operations are lazily loaded. When you call intermediate operations, they are actually not executed. They are just stored in the memory and executed when the terminal operation is called on the stream.
+
+How to print a Stream?
+When our code doesn’t work as expected, either we add a println() statement or go with setting a breakpoint to see the values of an object. Since intermediate operations don’t return something until needed, printing is not a straightforward process with the streams. Therefore, we need to apply some particular approaches to print the values. You will find that you have less requirement to print out the values of a stream as you get more practice with stream pipelines. However, while learning, printing is really helpful in order to debug the expected results using stream API in Java 8.
+
+Below are some approaches to print streams:
+
+
+1) s.forEach(System.out::println);
+
+2) System.out.println(s.collect(Collectors.toList()));
+
+3) s.limit(4).forEach(System.out::println);
+
+4) s.peek(System.out::println).count(); 
+
+Notice that only one of the approaches (third as described above) works for an infinite stream. It limits the number of elements in the stream before printing. If you try the others with an infinite stream, they will run until you kill the program.
+
+Also, notice that if you want to use stream after printing, you can use approach number 4 as described above. This means that you cannot use the stream anymore after printing if you use other approaches.
+
+How to use Stream Intermediate Operations?
+Let’s start learning intermediate operations one by one under stream API in Java 8.
+
+filter( )
+Method signature:  Stream<T> filter(Predicate<? super T> predicate)
+
+When to use filter( )? 
+If you want to return a stream from another stream that satisfies a given condition.
+
+
+Example
+
+This operation is very handy and powerful because we can pass any Predicate to it. For example, this filters all elements that begin with the letter ‘m’:
+
+Stream<String> s = Stream.of("lion", "cat", "monkey", "cow", "horse");
+ s.filter(x -> x.startsWith("c")).forEach(System.out::print); 
+Output
+catcow
+
+distinct( )
+Method signature:  Stream<T> distinct()
+
+When to use distinct( )? 
+If you want to return a stream from another stream with duplicate values removed.
+
+Example
+For example, observe the below code:
+
+Stream<String> s = Stream.of("cat", "cat", "monkey", "cow", "cat");
+ s.distinct().forEach(System.out::print); 
+Output
+monkeycow
+
+limit( ) and skip( )
+Method signature: Stream<T> limit(int maxSize)
+                              Stream<T> skip(int n)
+
+When to use limit( ) and skip( )? 
+If you want to make your stream smaller. Also, if you want to make a finite stream out of an infinite stream.
+
+Example
+
+Since both methods have a common characteristics, we will use them in a single example. Needless to say, using stream API in Java 8, we can use any number of intermediate operations in a Stream. The following code creates an infinite stream of numbers counting from 1. The skip() operation returns an infinite stream starting with the numbers counting from 10, as it skips the first nine elements because of skip(9). The limit() call takes the first six of those. Now we have a finite stream with six elements:
+
+Stream<Integer> s = Stream.iterate(1, n -> n + 1); 
+ s.skip(9).limit(6).forEach(System.out::print);  
+Output
+101112131415 
+ 
+--------------------------------------------------------***************----------------------
+
+
+map( ) vs flatMap( ) 
+=======================
+Method signatures:     <R> Stream<R> map(Function<? super T,? extends R> mapper)
+                                    <R> Stream<R> flatMap(Function<? super T,? extends Stream<? extends R>> mapper)
+
+When to use map( ) and flatMap( )? 
+===================================
+If you want to transform the elements of a stream in some way. 
+Use map() if you want to transform each element into a single value. 
+Use flatMap() if you want to transform each element to multiple values and also compress/flatten the resulting stream.
+
+What is the difference between map( ) and flatMap( )? 
+======================================================
+The additional word ‘flat’ in flatMap() method indicates the flattening, 
+which is the additional task done by flatMap(). 
+However below is the list of common differences between them.
+
+map( )
+=======
+1) It works on stream of values.
+2) It performs the only transformation.
+3) It produces a single value for each input value.
+
+flatMap( )
+==========
+1) It works on a stream of stream of values.
+2) It performs transformation as well as flattening.
+3) It produces multiple values for each input value.
+
+Example
+==========
+public class Programmer {
+   private String name;
+   private List<String> skills;
+
+   //getters, setters, AllArgsConstructor
+}
+
+List<Programmer> listOfProgrammers = List.of(
+     new Programmer("Programmer1", List.of("Java", "Python", "Angular")),
+     new Programmer("Programmer2", List.of("Ruby", "Angular", "Java")),
+     new Programmer("Programmer3", List.of("React", "Spring", "Angular")) 
+);
+
+map() method 
+=============
+listOfProgrammers.stream()
+      .map(Programmer::getName)
+      .collect(Collectors.toList())
+      .forEach(System.out::println);
+
+Output after applying map( )
+===============================
+Programmer1
+Programmer2
+Programmer3
+
+flatMap() method
+===================
+listOfProgrammers.stream()
+      .flatMap(p -> p.getSkills().stream())
+      .collect(Collectors.toSet())
+      .forEach(System.out::println);
+
+Output after applying flatMap( )
+=================================
+Java
+Spring
+Ruby
+React
+Angular
+Python
+
+sorted( )
+==========
+Method signature:  Stream<T> sorted()
+Stream<T> sorted(Comparator<? super T> comparator)
+
+When to use sorted( )? 
+=======================
+When we need to return a stream with the elements sorted. 
+Just like sorting arrays, Java uses natural ordering unless we specify a comparator.
+
+Example
+========
+Stream<String> streamOfStrings = Stream.of("Sunday", "Monday", "Wednesday", "Friday");
+ streamOfStrings.sorted().forEach(System.out::print);
+
+below code sorts the stream in reverse order.
+
+streamOfStrings.sorted(Comparator.reverseOrder()).forEach(System.out::print);
+
+Output
+=======
+FridayMondaySundayWednesday
+
+WednesdaySundayMondayFriday
+
+peek() 
+=======
+Method signature: Stream<T> peek(Consumer<? super T> action)
+
+When to use peek( )? 
+=====================
+Sometimes we need to perform some operations on each element of the stream before any terminal operation is applied.
+In fact, peek() performs the specified operation on each element of the stream and returns a new stream that we can further use.
+It is useful for debugging because it allows us to perform a stream operation without actually changing the stream.
+The most common use for peek() is to output the contents of the stream before any terminal operation is applied.
+
+Example
+==========
+public int triplesDivisibleBy2Sum(int start, int end) {
+    return IntStream.rangeClosed(start, end)
+     .peek(n -> System.out.println("original element : " +n))         //prints value before multiplying by 3
+     .map(n -> n * 3)
+     .peek(n -> System.out.println("Tripled element : " +n))          //prints value before filtering
+     .filter(n -> n % 2 == 0)
+     .peek(n -> System.out.println("Divisible By 2 element : " +n))   //prints value after filtering but before summing
+     .sum();
+}
+
+Output
+=======
+If we call the above method passing parameters as : triplesDivisibleBy2Sum(10, 15); will display the output as below.
+original element : 10
+Tripled element : 30
+Divisible By 2 element : 30
+original element : 11
+Tripled element : 33
+original element : 12
+Tripled element : 36
+Divisible By 2 element : 36
+original element : 13
+Tripled element : 39
+original element : 14
+Tripled element : 42
+Divisible By 2 element : 42
+original element : 15
+Tripled element : 45
+
+How to use Stream Terminal Operations?
+========================================
+Let’s learn terminal operations one by one from easier to complex in sequence under stream API in Java 8.
+
+count( )
+=========
+Method signature: long count()
+
+When to use count( )? 
+=======================
+When you want to determine the number of elements in a finite stream.
+
+For example, let’s call a count() method on a finite stream using stream API in Java 8 as shown below:
+
+Example
+=========
+Stream<String> s = Stream.of("Cow", "Tiger", "Elephant"); 
+System.out.println(s.count()); 
+
+Output
+=======
+3
+
+
+min( ) and max( )
+==================
+Method signature: Optional<T> min(<? super T> comparator)
+                              Optional<T> max(<? super T> comparator)
+
+Example
+==========
+Stream s = Stream.of("Java", "Python", "Scala"); 
+Optional min = s.min((s1, s2) -> s1.length() — s2.length()); 
+min.ifPresent(System.out::println); 
+
+Output
+======
+Java
+
+
+findAny( ) and findFirst( )
+============================
+Method signature: Optional<T> findAny()
+                              Optional<T> findFirst()
+
+Ex:
+====
+Optional firstEvenNumber = Stream.of(9, 5, 8, 7, 4, 9, 2, 11, 3)
+                            .filter(n -> n % 2 == 0)
+                            .findFirst();
+System.out.println(firstEvenNumber);
+
+Output
+==========
+Optional[8]
+
+Ex:2
+======
+Optional firstNumberDivisibleBy5 = Stream.of(9, 5, 8, 7, 4, 9, 2, 11, 10, 3)
+                                    .filter(n -> n > 10)             
+                                    .filter(n -> n % 5 == 0)    //empty stream in this line
+                                    .findFirst();
+System.out.println(firstNumberDivisibleBy5); 
+
+Output
+========
+Optional.empty
+
+
+anyMatch( ), allMatch( ), and noneMatch( )
+===========================================
+Method signature: boolean anyMatch(Predicate <? super T> predicate)
+boolean allMatch(Predicate <? super T> predicate)
+boolean noneMatch(Predicate <? super T> predicate) 
+
+Ex:
+===
+List<String> listOfSkills = Arrays.asList("Core Java", "Spring Boot", "Hibernate", "Angular"); 
+
+Predicate<String> pred = x -> x.startsWith("S"); 
+System.out.println(listOfSkills.stream().anyMatch(pred));         // true 
+System.out.println(listOfSkills.stream().allMatch(pred));         // false 
+System.out.println(listOfSkills.stream().noneMatch(pred));        // false
+
+Output
+=======
+true
+false
+false
+
+
+forEach( )
+============
+Method signature: void forEach(Consumer<? super T> action) 
+
+Ex:
+===
+Stream<String> streamofSkills = Stream.of("Java", "Python", "Angular");
+ streamofSkills.forEach(System.out::println);
+
+Output
+=======
+Java
+Python
+Angular
+
+==============================================
+
+collect( )
+===========
+Please note that the collect() method doesn’t belong to the Collector class.
+It is defined in Stream class and that’s the reason you can call it on Stream after doing any filtering or mapping operations.
+However, it accepts a Collector to accumulate elements of Stream into a specified Collection.
+
+Furthermore, the Collector class provides various methods like toList(), toSet(), toMap(), and toConcurrentMap() to collect the result of Stream into List, Set, Map, and ConcurrentMap respectively. Additionally, it also provides a special toCollection() method that we can use to collect Stream elements into a specified Collection like ArrayList, Vector, LinkedList, HashSet etc.
+
+Method signature: <R> R collect(Supplier<R> supplier,  BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner)
+                              <R, A> R collect(Collector<? super T,  A, R> collector)
+
+Ex:
+===
+Stream<String> streamOfSkills = Stream.of("Java", "Scala", "Python", "Spring");
+ streamOfSkills
+    .filter(x -> x.startsWith("S"))
+    .collect(Collectors.toList())     //Collecting the result of a stream into a List
+    .forEach(System.out::println);
+
+Output
+=======
+Scala
+Spring
+
+Ex-2
+=====
+streamOfSkills
+ .filter(x -> x.length() > 3)
+ .collect(Collectors.toCollection(ArrayList::new))    //Collecting the result of a stream into a List of our choice
+ .forEach(System.out::println);
+
+Output
+=======
+Python
+Scala
+Spring
+
+reduce()
+=========
+The reduce() method combines a stream into a single object. As we can tell from the name, it is a reduction.
+
+Method signature:  T reduce(T identity, BinaryOperator<T> accumulator)
+                               Optional<T> reduce(BinaryOperator<T> accumulator)
+                               <U> U reduce(U identity,  BiFunction<U, ? super T, U> accumulator,  BinaryOperator<U> combiner)
+
+Ex:
+====
+List<String> letters = Arrays.asList("j", "a", "v", "a", "t", "e", "c", "h", "o", "n", "l", "i", "n", "e"); 
+String result = letters .stream()
+    .reduce(" ", (partialString, element) -> partialString + element);
+System.out.println(result);
+
+String result = letters.stream().reduce(" ", String::concat);
+
+Output
+=======
+javatechonline
+
+Ex-2
+=====
+BinaryOperator op = (a, b) -> a * b; 
+Stream empty = Stream.empty(); 
+Stream oneElement = Stream.of(3); 
+Stream threeElements = Stream.of(3, 4, 5); 
+empty.reduce(op).ifPresent(System.out::print); // no output 
+oneElement.reduce(op).ifPresent(System.out::print); // 3 
+threeElements.reduce(op).ifPresent(System.out::print); // 60
+
+=========********************************************=========================

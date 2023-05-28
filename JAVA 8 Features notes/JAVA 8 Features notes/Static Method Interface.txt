@@ -1,0 +1,128 @@
+https://javatechonline.com/java-8-features/
+
+Java 8 Features Example of "Static Method" Interface
+===================================================
+
+Static Method Interface
+=========================
+Static methods in interfaces were introduced in JDK 8 and became the part of Java 8 Features.
+Similar to Default Methods in Interfaces,
+Static Methods also have a method body (implementation).
+However, we can’t override them. Needless to say, static methods can’t be overridden.
+
+How to declare a Static Method in Interface?
+--------------------------------------------
+The Process of declaring a Static method in Interface is similar to defining a Static method in a class.
+In simple words, we have to use the static keyword while defining the method. 
+
+For example, look at the code below.
+-------------------------------------
+interface A {
+    public static void m1(){
+	   ------
+      System.out.println("I am introduced in Java 1.8");
+    }
+}
+
+
+How to define main() method inside an Interface ?
+==================================================
+
+Ex:
+===
+interface Main {
+    public static void main(String[] args){
+       System.out.println("Define main() method inside interfaces now :)");
+    }
+}
+
+
+Can we have main() Method inside an Abstract class & Enum ?
+===========================================================
+
+Ex:
+===
+public abstract class B {
+     public static void main(String[] args){
+       System.out.println("I am inside abstract class");
+     }
+}
+
+public enum C {
+     ;
+     public static void main(String[] args){
+       System.out.println("I am inside enum");
+     }
+}
+
+====================================================
+
+How to call static method of an Interface?
+==========================================
+Ex:
+====
+interface A {
+    public static void m1(){
+      System.out.println("call me with the Interface name");
+    }
+}
+
+class Test implements A {
+    public static void main(String[] args){
+      A.m1(); //only way to call interface's static methods
+    }
+}
+
+Can we Override Interface’s static methods ?
+==============================================
+As aforementioned, Interface’s static methods can’t be overridden in implementing classes 
+or in extending interfaces as they are not available to child classes by default.
+ However, we can declare methods with the same signature in the implementing classes. 
+They are valid, but we will not consider them as overridden methods.
+
+Ex:
+===
+interface A {
+    public static void m1(){
+      System.out.println("I am Interface's static method");
+    }
+}
+
+class Test1 implements A {
+    public static void m1(){
+      System.out.println("I am not an overridden method");
+    }
+}
+
+class Test2 implements A {
+    public void m1(){
+      System.out.println("I am not an overridden method");
+    }
+}
+
+class Test3 implements A {
+    private static void m1(){
+      System.out.println("I am not an overridden method");
+    }
+}
+For example, in the above code snippet all three implementing classes Test1, Test2 & Test3 contain a normal method m1(). 
+We will not consider them as an overridden method, but general method only.
+
+
+
+Note on Default & Static Methods :
+==================================
+A method inside an Interface can’t be declared default & static together. 
+Default methods can’t be static & static methods can’t be default.
+
+For example, the method m1() in below code snippet is an invalid method.
+------------------------------------------------------------------------
+interface A {
+    default static void m1(){
+    ---------------
+      System.out.println("I am an invalid method"); // Invalid method
+    }
+}
+
+===============================================================================
+
