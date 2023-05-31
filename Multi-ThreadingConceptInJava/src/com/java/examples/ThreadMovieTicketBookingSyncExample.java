@@ -6,6 +6,7 @@ class ticketBooking{
 	boolean booked = false;
 	
 	public synchronized void bookTicket(String name) {   //synchronized to pass method level or method below block code use this synchronized() method
+							// It means it allows only one-thread at a time until the thread is complete or die remaining threads are not allowed this is called synchronization.
 		
 	//	synchronized(this) {
 		if(booked == false) {
