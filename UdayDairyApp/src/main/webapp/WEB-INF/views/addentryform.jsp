@@ -1,0 +1,55 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="header">
+
+<div class="first">
+
+<img src="<c:url value="/images/img.png"/>" width="40" height="30">
+</div>
+<div class="second">
+MyDairy App
+</div>
+</div>
+<br/>
+
+<hr/>
+<br/><br/>
+<h1>welcome  <span style="color:SteelBlue">${user.username}</span></h1> 
+
+<a href="signout" style="color:red;float:right">Signout</a>
+
+<div class="bodypart">
+
+<div class="bodypart1">
+<img src="<c:url value="/images/img.png"/>">
+</div>
+
+<div class="bodypart2">
+<h1>ADD ENTRY</h1><br/><br/><br/>
+<form action="saveentry" method="POST">
+<label>Date</label> <input type="date" name="entrydate" class="formcontrol"><br/><br/>
+<label>Description</label> 
+<textarea rows="10" cols="30" name="description">
+</textarea>
+<input type="hidden" name="userid" value="${user.id}">
+
+<br/><br/><br/>
+<button type="submit">SAVE ENTRY </button>
+
+</form>
+
+</div>
+
+
+
+
+</div>
+
+</body>
+</html>
